@@ -427,4 +427,85 @@ class WPCustomFunctions {
             echo("<script>console.log('PHP: ".$data."');</script>");
         }
     }
+    /**
+	* 
+	* @param undefined $files this is $_files
+	* @param undefined $post_id
+	* 
+	* @return
+	*/
+    function insert_thumbnail_to_post($files,$post_id,$default_thumb){
+	    require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+	    require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+	    require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+	    if ($files) {
+	        foreach ($files as $file => $array) {
+	            if ($files[$file]['error'] !== UPLOAD_ERR_OK) {
+	                //echo "upload error : " . $files[$file]['error'];
+	                $upload_dir = wp_upload_dir();
+	                $image_data = file_get_contents($default_thumb);
+	                $filename = basename($default_thumb);
+	                if(wp_mkdir_p($upload_dir['path']))
+	                    $filet = $upload_dir['path'] . '/' . $filename;
+	                else
+	                    $filet = $upload_dir['basedir'] . '/' . $filename;
+	                file_put_contents($filet, $image_data);
+	                $wp_filetype = wp_check_filetype($filename, null );
+	                $attachment = array(
+	                    'post_mime_type' => $wp_filetype['type'],
+	                    'post_title' => sanitize_file_name($filename),
+	                    'post_content' => '',
+	                    'post_status' => 'inherit'
+	                );
+	                $attach_id = wp_insert_attachment( $attachment, $filet, $post_id );
+	                $attach_data = wp_generate_attachment_metadata( $attach_id, $filet );
+	                wp_update_attachment_metadata( $attach_id, $attach_data );
+	                //set_post_thumbnail( $post_id, $attach_id );
+	            }
+	            else{
+	                $attach_id = media_handle_upload( $file, $post_id );
+	            }
+	        }
+	    }
+	    update_post_meta($post_id,'_thumbnail_id',$attach_id);
+
+	}
+	/**
+	* 
+	* @param undefined $image
+	* @param undefined $post_id
+	* @param undefined $thumbid
+	* 
+	* @return
+	*/
+	function insert_custom_thumbnail($image,$post_id,$thumbid){
+	    require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+	    require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+	    require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+	                $upload_dir = wp_upload_dir();
+	                $image_data = file_get_contents($image);
+	                $filename = basename($image);
+	                if(wp_mkdir_p($upload_dir['path']))
+	                    $filet = $upload_dir['path'] . '/' . $filename;
+	                else
+	                    $filet = $upload_dir['basedir'] . '/' . $filename;
+	                file_put_contents($filet, $image_data);
+	                $wp_filetype = wp_check_filetype($filename, null );
+	                $attachment = array(
+	                    'post_mime_type' => $wp_filetype['type'],
+	                    'post_title' => sanitize_file_name($filename),
+	                    'post_content' => '',
+	                    'post_status' => 'inherit'
+	                );
+	                $attach_id = wp_insert_attachment( $attachment, $filet, $post_id );
+	                $attach_data = wp_generate_attachment_metadata( $attach_id, $filet );
+	                wp_update_attachment_metadata( $attach_id, $attach_data );
+	                
+	            
+	            
+	        
+	    
+	    update_post_meta($post_id,'_thumbnail_id_2',$attach_id);
+
+	}
 } 
