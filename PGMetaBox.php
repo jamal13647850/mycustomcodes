@@ -53,6 +53,23 @@ class PGMetaBox {
     function AddSelect($name,$options=array(array('value'=>'','text'=>''))){
         $newfield=array('name'=>$name,'type'=>'select','options'=>$options);
         array_push($this->vars['metafields'],$newfield);
+    }
+    function AddSelect_ang_count($name,$options=array(array('value'=>'','text'=>''))){
+        $newfield=array('name'=>$name,'type'=>'select_ang_count','options'=>$options);
+        array_push($this->vars['metafields'],$newfield);
+    }
+    function AddSelect_ang_city($name,$options=array(array('value'=>'','text'=>''))){
+        $newfield=array('name'=>$name,'type'=>'select_ang_city','options'=>$options);
+        array_push($this->vars['metafields'],$newfield);
+    }
+    function AddMultiSelect($name,$options=array(array('value'=>'','text'=>''))){
+        $newfield=array('name'=>$name,'type'=>'multiselect','options'=>$options);
+        array_push($this->vars['metafields'],$newfield);
+
+    }
+    function Addhr($name){
+        $newfield=array('name'=>$name,'type'=>'hr');
+        array_push($this->vars['metafields'],$newfield);
 
     }
     function main_meta_box() {
@@ -68,7 +85,9 @@ class PGMetaBox {
             if (isset($field['name'])){
             $$field['name'] = get_post_meta($post->ID, $field['name'], true);}
         }
-        echo '<div class="salon-maindiv"><table>';
+        ?>
+        <div class="salon-maindiv" ng-controller="AddressCtrl" > <table>
+            <?php
         foreach($this->vars['metafields'] as $field){
             if ($field['type']=='text'){
                 echo  '<tr><td>
@@ -81,11 +100,14 @@ class PGMetaBox {
                 $$field['name']!=''?$checked=checked( $$field['name'], $field['value'],false ):$checked=$field['checked'];
                 echo  '<tr><td>
                                 <input type="radio"  name="'. $field['name'] .'" value="' . __($field['value'],'PG-PA') . '" '. $field['disabled'].' '.$checked.'/>'.__($field['label']).
-                            '</td></tr>';
+
+                    '</td></tr>';
+
 
             }
             if ($field['type']=='checkbox'){
                 $$field['name']!=''?$checked=checked( $$field['name'], $field['value'],false ):$checked=$field['checked'];
+
                 echo  '<tr><td>
                                 <input type="checkbox"  name="'. $field['name'] .'" value="' . __($field['value'],'PG-PA') . '" '. $field['disabled'].' '.$checked.'/>'.__($field['label']).
                     '</td></tr>';
@@ -106,15 +128,109 @@ class PGMetaBox {
                 echo  '<tr><td>'.
                       '<select name="'. $field['name'] .'">';
                     foreach($field['options'] as $option){
-                        print_r($option);
+                        $$field['name']!=''?$selected=selected( $$field['name'], $option['value'],false ):$selected=$option['selected'];
                         ?>
-                        <option value="<?php echo $option['value'] ?>"><?php echo $option['text'] ?></option>
+                        <option <?php echo $selected ?> value="<?php echo $option['value'] ?>"><?php echo $option['text'] ?></option>
 <?php
                     }
 
                     echo '</select>';
 
                            echo '</td></tr>';
+
+
+            }
+            if ($field['type']=='select_ang_count'){
+                $country=get_countries_by_name($$field['name']);
+                foreach($country as $stat){
+                    $country= $stat->country;
+                    $id=$stat->id;
+                }
+                if (count($country)){
+                  ?>
+                    <script>
+                            jQuery('html').attr('ng-init',"selectedcountries={ id:"+"'"+"<?php echo $id; ?>"+"',  country:'"+"<?php echo $country; ?>"+"'}")
+
+                    </script>
+                    <?php
+                }
+
+
+?>
+
+                <label for="countries" class="settextalign" ><?php echo __('country','dr-gmap') ?></label><br>
+                <select  name="<?php echo $field['name']?>" id="id-countries1" required class="form-control drgm-select" ng-model="selectedcountries"
+                        ng-options="p.country for p in countries track by p.country" ng-change="changecountry()" data-style-select data-map>
+                </select>
+               <?php
+
+                echo '</select>';
+
+                echo '</td></tr>';
+
+
+            }
+
+
+            if ($field['type']=='select_ang_city'){
+                $cities=get_cities_by_name($$field['name']);
+                foreach($cities as $stat){
+                    $city= $stat->city;
+                    $id=$stat->id;
+                    $country_id=$stat->country_id;
+                }
+            if (count($city)){
+                ?>
+                <script>
+                    jQuery('html').attr('ng-init',"selectedcities={ id:"+"'"+"<?php echo $id; ?>"+"',  country_id:'"+"<?php echo $country_id; ?>"+"',  city:'"+"<?php echo $city; ?>"+"'}")
+
+                </script>
+            <?php
+            }
+
+
+            ?>
+
+                <label for="cities" class="settextalign"><?php echo __('City','dr-gmap') ?></label><br>
+                <select  name="<?php echo $field['name']?>" id="id-cities1" required class="form-control drgm-select" ng-model="selectedcities"
+                         ng-options="c.city  for c in city_result track by c.city"  data-style-select data-map>
+                </select>
+                <?php
+
+                echo '</select>';
+
+                echo '</td></tr>';
+
+
+            }
+
+            if ($field['type']=='hr'){
+                ?>
+                <hr>
+                <?php
+            }
+            if ($field['type']=='multiselect'){
+                echo  '<tr><td>'.
+                    '<select name="'. $field['name'] .'[]" multiple="multiple" id="id-SlectBox" class="SlectBox">';
+                foreach($field['options'] as $option){
+
+                    if (in_array($option['value'], $$field['name']))
+                    {
+                        $mach_value=$option['value'];
+                    }
+                    else
+                    {
+                        $mach_value='no_mach_in_this';
+                    }
+                    $$field['name']!=''?$selected=selected( $mach_value, $option['value'],false ):$selected=$option['selected'];
+                    ?>
+                    <option <?php echo $selected ?> value="<?php echo $option['value'] ?>"><?php echo $option['text'] ?></option>
+                <?php
+                }
+
+                echo '</select>';
+
+                echo '</td></tr>';
 
 
             }
@@ -131,8 +247,12 @@ class PGMetaBox {
         global $post;
         if( isset($_POST['post_type']) && ($_POST['post_type'] ==$this->vars['posttype']) ) {
             foreach($this->vars['metafields'] as $field){
-                if( isset($_POST[$field['name']]) && $_POST[$field['name']] != get_post_meta($post->ID, $field['name'], true)) {
+                if( isset($_POST[$field['name']]) && $_POST[$field['name']] != get_post_meta($post->ID, $field['name'], true) && $_POST[$field['type']]!='multiselect' ) {
                     update_post_meta($post->ID, $field['name'], $_POST[$field['name']]);
+                }
+                elseif( isset($_POST[$field['name']]) && $_POST[$field['name']] != get_post_meta($post->ID, $field['name'], true) && $_POST[$field['type']]=='multiselect' ){
+
+                    update_post_meta($post->ID, $field['name'], implode("*",$_POST[$field['name']]));
                 }
             }
         }

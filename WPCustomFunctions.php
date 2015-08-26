@@ -428,6 +428,56 @@ class WPCustomFunctions {
         }
     }
     /**
+     * @param $object
+     * @return array
+     */
+    function objectToArray( $object ){
+        if( !is_object( $object ) && !is_array( $object ) )
+        {
+            return $object;
+        }
+        if( is_object( $object ) )
+        {
+            $object = get_object_vars( $object );
+        }
+        return array_map( 'objectToArray', $object );
+    }
+    /**
+     * @return mixed
+     */
+    function get_user_role() {
+        global $current_user;
+
+        $user_roles = $current_user->roles;
+        $user_role = array_shift($user_roles);
+
+        return $user_role;
+    }
+
+    /**
+     * @param $slug
+     * @param $title
+     * @param $content
+     * @param int $author
+     * @param int $menu_order
+     * @return int|WP_Error
+     */
+    function create_new_page($slug,$title,$content,$author=1,$menu_order=1){
+        $new_page_id = wp_insert_post( array(
+            'post_title' => $title,
+            'post_type' => 'page',
+            'post_name' => $slug,
+            'comment_status' => 'closed',
+            'ping_status' => 'closed',
+            'post_content' => $content,
+            'post_status' => 'publish',
+            'post_author' => $author,
+            'menu_order' => $menu_order
+        ));
+        return $new_page_id;
+
+    }
+    /**
 	* 
 	* @param undefined $files this is $_files
 	* @param undefined $post_id
@@ -508,4 +558,29 @@ class WPCustomFunctions {
 	    update_post_meta($post_id,'_thumbnail_id_2',$attach_id);
 
 	}
+
+    /**
+     * @param $userid
+     * @param string $post_type
+     * @return mixed
+     */
+    function count_user_posts_by_type( $userid, $post_type = 'post' ) {
+        global $wpdb;
+        $where = get_posts_by_author_sql( $post_type, true, $userid );
+        $count = $wpdb->get_var( "SELECT COUNT(*) FROM $wpdb->posts $where" );
+        return apply_filters( 'get_usernumposts', $count, $userid );
+    }
+    function add_default_content($cont,$post_type='post'){
+        $this->vars['editorcontent'] = $cont;
+        $this->vars['posttype'] = $post_type;
+        add_filter( 'default_content', array($this,'my_editor_content'), 10, 2 );
+        function my_editor_content( $content, $post ) {
+            switch( $post->post_type ) {
+                case $this->vars['posttype']:
+                    $content = $this->vars['editorcontent'];
+                    break;
+            }
+            return $content;
+        }
+    }
 } 
