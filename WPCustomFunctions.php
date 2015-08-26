@@ -583,4 +583,27 @@ class WPCustomFunctions {
             return $content;
         }
     }
+    // ADD NEW COLUMN
+    function ST4_columns_head($defaults) {
+        $defaults['question Type'] = 'gggggg';
+        return $defaults;
+    }
+    // SHOW THE content of column
+    function ST4_columns_content($column_name, $post_ID) {
+        if ($column_name == 'question Type') {
+            $posttype = 'utfgtcc';
+
+            echo $posttype;
+
+        }
+    }
+
+    /**
+     * add new column to post in admin
+     */
+    function add_new_column(){
+
+        add_action('manage_posts_custom_column', array($this,'ST4_columns_content'), 10, 2);
+        add_filter('manage_posts_columns', array($this,'ST4_columns_head'));
+    }
 } 
