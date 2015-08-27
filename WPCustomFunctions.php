@@ -583,27 +583,51 @@ class WPCustomFunctions {
             return $content;
         }
     }
-    // ADD NEW COLUMN
-    function ST4_columns_head($defaults) {
-        $defaults['question Type'] = 'gggggg';
-        return $defaults;
-    }
-    // SHOW THE content of column
-    function ST4_columns_content($column_name, $post_ID) {
-        if ($column_name == 'question Type') {
-            $posttype = 'utfgtcc';
-
-            echo $posttype;
-
+    /**
+     * add new column to post and cpt in admin
+     * $ppp=new WPCustomFunctions(array());
+     *  $ppp->add_new_column('cpp','new header',array(array('postid'=>1,'value'=>'testvalue'),array('postid'=>2,'value'=>'sva')));
+     */
+    function add_new_column($posttype,$colum_name,$column_header,$content=array()){
+        $this->myvars['column_name'] = $colum_name;
+        $this->myvars['column_header']=$column_header;
+        $this->myvars['content']=$content;
+        switch ($posttype){
+            case 'all':
+                $headerhook='manage_posts_columns';
+                $contenthook='manage_posts_custom_column';
+                break;
+            default:
+                $headerhook='manage_'.$posttype.'_posts_columns';
+                $contenthook='manage_'.$posttype.'_posts_custom_column';
+                break;
         }
+        add_action($contenthook, array($this,'ST4_columns_content'), 10, 2);
+        add_filter($headerhook, array($this,'ST4_columns_head'));
     }
 
     /**
-     * add new column to post in admin
+     * remove column from a post or cpt in admin
+     * @param $defaults
+     * @return mixed
      */
-    function add_new_column(){
+    function remove_column($posttype,$remove_colum_name){
+        $this->myvars['remove_column_name'] = $remove_colum_name;
+        $hook='manage_'.$posttype.'_posts_columns';
+        add_filter($hook, array($this,'ST4_columns_remove_column'),1000);
+    }
 
-        add_action('manage_posts_custom_column', array($this,'ST4_columns_content'), 10, 2);
-        add_filter('manage_posts_columns', array($this,'ST4_columns_head'));
+    /**
+     * add facebook and twitter share button to rss
+     * @param string $facebookicon
+     * @param string $twitericon
+     * @example
+     * $ppp->add_social_share_rss(cofegame_class_URL.'img/facebook.jpg',cofegame_class_URL.'img/Twitter.png');
+     */
+    function add_social_share_rss($facebookicon='./img/facebook.jpg',$twitericon='./img/Twitter.png'){
+        $this->myvars['facebook_icon_url']=$facebookicon;;
+        $this->myvars['twitter_icon_url']=$twitericon;
+        add_filter('the_excerpt_rss', array($this,'wpb_add_feed_content'));
+        add_filter('the_content', array($this,'wpb_add_feed_content'));
     }
 } 

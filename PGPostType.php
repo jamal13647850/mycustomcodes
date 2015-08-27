@@ -69,6 +69,39 @@ class PGPostType {
      * @return array
      * add new post or page actions link
      * need set a function name to $this->vars['call']
+     * @example php:
+     * $pgqapt->call='add_send_mail_actions';
+        function add_send_mail_actions(){
+        global $post;
+        if ($post->post_type == "pgquestionanswer"){
+        $author_id=$post->post_author;
+        $mail=get_the_author_meta( 'user_email',  $author_id );
+        $permalink = get_permalink();
+        $actions['sendmail'] = '<a href="#" class="sendmail" '.'data-author='.$mail.' data-link='. $permalink.'>' . __('send mail','vai') . '</a>';
+        }
+        return $actions;
+        }
+     * @example js:
+     * jQuery( document ).on( "click", "a.sendmail", function() {
+        var el=jQuery(this);
+        var authormail =jQuery(this).data("author");
+        var questionlink =jQuery(this).data("link");
+        jQuery.ajax({
+
+        url:pgqaajax.ajaxurl,
+        type:'post',
+        data:{
+        action:'send_mail_link_n',
+        authormail:authormail,
+        questionlink:questionlink
+        },
+        success:function(resp){
+        alert(resp);
+        }
+        });
+        return false;
+        });
+     *
      */
     function pg_post_or_page_row_actions($actions, $page_object)
     {
