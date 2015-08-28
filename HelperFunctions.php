@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Created by PhpStorm.
- * User: jamal13647850
- * Date: 27/08/2015
- * Time: 09:49 AM
+ * Created by Sayyed jamal ghasemi.
+ *@author Sayyed Jamal Ghasemi
+ *@author Sayyed Jamal Ghasemi <jamal13647850@gmail.com>
+ *@version 1.0.0
  */
 class HelperFunctions {
 
@@ -103,5 +103,61 @@ class HelperFunctions {
             </p>';
         }
         return $content;
+    }
+
+    /**
+     * a helper function for remove plugin meta line in plugins screen
+     * @param $plugin_meta
+     * @param $plugin_file
+     * @return mixed
+     */
+    function range_plugin_plugin_meta( $plugin_meta, $plugin_file ) {
+        return $plugin_meta;
+    }
+
+    /**
+     *  a helper function for remove plugin updates
+     * @return object
+     */
+    function remove_core_updates(){
+        global $wp_version;return(object) array('last_checked'=> time(),'version_checked'=> $wp_version,);
+    }
+    /**
+     * Remove edit link for all plugins and Remove deactivate link for important plugins
+     */
+    function disable_plugin_deactivation( $actions, $plugin_file, $plugin_data, $context ) {
+        // Remove edit link for all plugins
+        if ( array_key_exists( 'edit', $actions ) )
+            unset( $actions['edit'] );
+        // Remove deactivate link for important plugins
+        if ( array_key_exists( 'deactivate', $actions ) && in_array( $plugin_file, $this->vars['deactiveplugin']))
+            unset( $actions['deactivate'] );
+        return $actions;
+    }
+    /**
+     * helper function to change footer content
+     */
+    function change_footer_content() {
+        echo ($this->myvars['footercontent']);
+    }
+    /**
+     * helper function to change footer version
+     */
+    function change_footer_version() {
+        return ($this->myvars['footerversion']);
+    }
+
+    /**
+     * helper function for remove menu in admin panel
+     */
+    function remove_menu_elements(){
+        global $submenu,$menu;
+        remove_submenu_page( 'themes.php', 'theme-editor.php' );
+        remove_submenu_page( 'themes.php', 'themes.php' );
+        unset($submenu['themes.php'][6]); // remove customize link
+        unset($submenu['themes.php'][15]); // remove customize header link
+        unset($submenu['index.php'][10]); // remove updates link in dashboard menu
+        unset($menu[75]); // remove tools link
+        remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
     }
 }

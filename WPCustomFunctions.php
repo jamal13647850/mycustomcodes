@@ -1,12 +1,15 @@
 <?php
 /**
+ * Created by Sayyed jamal ghasemi.
  *@author Sayyed Jamal Ghasemi
  *@author Sayyed Jamal Ghasemi <jamal13647850@gmail.com>
  *@version 1.0.0
  *
  */
-class WPCustomFunctions {
+require_once('HelperFunctions.php');
+class WPCustomFunctions extends HelperFunctions {
     private $vars = array();
+
     public function __construct($param) {
         $this->vars['DirPath'] =plugin_dir_path( __FILE__ ) ;
         $this->vars['UrlPath'] =plugin_dir_url( __FILE__ ) ;
@@ -47,13 +50,13 @@ class WPCustomFunctions {
                     <a target="_blank" href="<?php the_permalink() ?>">
                         <?php the_title(); ?>
                     </a>
-                <?php
+                    <?php
                 endwhile;
                 wp_reset_postdata();
                 ?>
             </li>
         </ul>
-    <?php
+        <?php
     }
 
     /**
@@ -144,7 +147,7 @@ class WPCustomFunctions {
                 <a class="rpa" href="<?php the_permalink() ?>" title="<?php the_title() ?>">
                     <?php the_title() ?></a>
             </li>
-        <?php
+            <?php
         endwhile;
     }
     /**
@@ -169,7 +172,7 @@ class WPCustomFunctions {
                 <a class="rpa" href="<?php the_permalink() ?>" title="<?php the_title() ?>">
                     <?php the_title() ?></a>
             </li>
-        <?php
+            <?php
         endwhile;
     }
     /**
@@ -354,9 +357,9 @@ class WPCustomFunctions {
         add_action( 'wp_footer', array($this,'front_inline_js') );
     }
     /**
-    *$post_id - The ID of the post you'd like to change.
-    *$status -  The post status publish|pending|draft|private|static|object|attachment|inherit|future|trash.
-    */
+     *$post_id - The ID of the post you'd like to change.
+     *$status -  The post status publish|pending|draft|private|static|object|attachment|inherit|future|trash.
+     */
     function change_post_status($post_id,$status){
         $current_post = get_post( $post_id, 'ARRAY_A' );
         $current_post['post_status'] = $status;
@@ -478,86 +481,86 @@ class WPCustomFunctions {
 
     }
     /**
-	* 
-	* @param undefined $files this is $_files
-	* @param undefined $post_id
-	* 
-	* @return
-	*/
+     *
+     * @param undefined $files this is $_files
+     * @param undefined $post_id
+     *
+     * @return
+     */
     function insert_thumbnail_to_post($files,$post_id,$default_thumb){
-	    require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-	    require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-	    require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-	    if ($files) {
-	        foreach ($files as $file => $array) {
-	            if ($files[$file]['error'] !== UPLOAD_ERR_OK) {
-	                //echo "upload error : " . $files[$file]['error'];
-	                $upload_dir = wp_upload_dir();
-	                $image_data = file_get_contents($default_thumb);
-	                $filename = basename($default_thumb);
-	                if(wp_mkdir_p($upload_dir['path']))
-	                    $filet = $upload_dir['path'] . '/' . $filename;
-	                else
-	                    $filet = $upload_dir['basedir'] . '/' . $filename;
-	                file_put_contents($filet, $image_data);
-	                $wp_filetype = wp_check_filetype($filename, null );
-	                $attachment = array(
-	                    'post_mime_type' => $wp_filetype['type'],
-	                    'post_title' => sanitize_file_name($filename),
-	                    'post_content' => '',
-	                    'post_status' => 'inherit'
-	                );
-	                $attach_id = wp_insert_attachment( $attachment, $filet, $post_id );
-	                $attach_data = wp_generate_attachment_metadata( $attach_id, $filet );
-	                wp_update_attachment_metadata( $attach_id, $attach_data );
-	                //set_post_thumbnail( $post_id, $attach_id );
-	            }
-	            else{
-	                $attach_id = media_handle_upload( $file, $post_id );
-	            }
-	        }
-	    }
-	    update_post_meta($post_id,'_thumbnail_id',$attach_id);
+        require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+        require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+        require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+        if ($files) {
+            foreach ($files as $file => $array) {
+                if ($files[$file]['error'] !== UPLOAD_ERR_OK) {
+                    //echo "upload error : " . $files[$file]['error'];
+                    $upload_dir = wp_upload_dir();
+                    $image_data = file_get_contents($default_thumb);
+                    $filename = basename($default_thumb);
+                    if(wp_mkdir_p($upload_dir['path']))
+                        $filet = $upload_dir['path'] . '/' . $filename;
+                    else
+                        $filet = $upload_dir['basedir'] . '/' . $filename;
+                    file_put_contents($filet, $image_data);
+                    $wp_filetype = wp_check_filetype($filename, null );
+                    $attachment = array(
+                        'post_mime_type' => $wp_filetype['type'],
+                        'post_title' => sanitize_file_name($filename),
+                        'post_content' => '',
+                        'post_status' => 'inherit'
+                    );
+                    $attach_id = wp_insert_attachment( $attachment, $filet, $post_id );
+                    $attach_data = wp_generate_attachment_metadata( $attach_id, $filet );
+                    wp_update_attachment_metadata( $attach_id, $attach_data );
+                    //set_post_thumbnail( $post_id, $attach_id );
+                }
+                else{
+                    $attach_id = media_handle_upload( $file, $post_id );
+                }
+            }
+        }
+        update_post_meta($post_id,'_thumbnail_id',$attach_id);
 
-	}
-	/**
-	* 
-	* @param undefined $image
-	* @param undefined $post_id
-	* @param undefined $thumbid
-	* 
-	* @return
-	*/
-	function insert_custom_thumbnail($image,$post_id,$thumbid){
-	    require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-	    require_once(ABSPATH . "wp-admin" . '/includes/file.php');
-	    require_once(ABSPATH . "wp-admin" . '/includes/media.php');
-	                $upload_dir = wp_upload_dir();
-	                $image_data = file_get_contents($image);
-	                $filename = basename($image);
-	                if(wp_mkdir_p($upload_dir['path']))
-	                    $filet = $upload_dir['path'] . '/' . $filename;
-	                else
-	                    $filet = $upload_dir['basedir'] . '/' . $filename;
-	                file_put_contents($filet, $image_data);
-	                $wp_filetype = wp_check_filetype($filename, null );
-	                $attachment = array(
-	                    'post_mime_type' => $wp_filetype['type'],
-	                    'post_title' => sanitize_file_name($filename),
-	                    'post_content' => '',
-	                    'post_status' => 'inherit'
-	                );
-	                $attach_id = wp_insert_attachment( $attachment, $filet, $post_id );
-	                $attach_data = wp_generate_attachment_metadata( $attach_id, $filet );
-	                wp_update_attachment_metadata( $attach_id, $attach_data );
-	                
-	            
-	            
-	        
-	    
-	    update_post_meta($post_id,'_thumbnail_id_2',$attach_id);
+    }
+    /**
+     *
+     * @param undefined $image
+     * @param undefined $post_id
+     * @param undefined $thumbid
+     *
+     * @return
+     */
+    function insert_custom_thumbnail($image,$post_id,$thumbid){
+        require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+        require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+        require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+        $upload_dir = wp_upload_dir();
+        $image_data = file_get_contents($image);
+        $filename = basename($image);
+        if(wp_mkdir_p($upload_dir['path']))
+            $filet = $upload_dir['path'] . '/' . $filename;
+        else
+            $filet = $upload_dir['basedir'] . '/' . $filename;
+        file_put_contents($filet, $image_data);
+        $wp_filetype = wp_check_filetype($filename, null );
+        $attachment = array(
+            'post_mime_type' => $wp_filetype['type'],
+            'post_title' => sanitize_file_name($filename),
+            'post_content' => '',
+            'post_status' => 'inherit'
+        );
+        $attach_id = wp_insert_attachment( $attachment, $filet, $post_id );
+        $attach_data = wp_generate_attachment_metadata( $attach_id, $filet );
+        wp_update_attachment_metadata( $attach_id, $attach_data );
 
-	}
+
+
+
+
+        update_post_meta($post_id,'_thumbnail_id_2',$attach_id);
+
+    }
 
     /**
      * @param $userid
@@ -630,4 +633,53 @@ class WPCustomFunctions {
         add_filter('the_excerpt_rss', array($this,'wpb_add_feed_content'));
         add_filter('the_content', array($this,'wpb_add_feed_content'));
     }
+
+    /**
+     * hid plugin meta line in plugins screen
+     */
+    function hide_plugin_meta(){
+        add_filter( 'plugin_row_meta', array($this,'range_plu_plugin_meta'), 10, 2 );
+    }
+
+    /**
+     * hide all update notification in wordpress
+     */
+    function hide_update(){
+        add_filter('pre_site_transient_update_core',array($this,'remove_core_updates'));
+        add_filter('pre_site_transient_update_plugins',array($this,'remove_core_updates'));
+        add_filter('pre_site_transient_update_themes',array($this,'remove_core_updates'));
+        remove_action('load-update-core.php','wp_update_plugins');
+        add_filter('pre_option_update_core','__return_null');
+    }
+
+    /**
+     * Remove edit link for all plugins and Remove deactivate link for important plugins
+     */
+    function disable_plugin_deactivation_edit(){
+        add_filter( 'plugin_action_links', array($this,'disable_plugin_deactivation'), 10, 4 );
+    }
+
+    /**
+     * change text of footer in admin panel
+     * @param $text string
+     */
+    function change_footer_text($text){
+        $this->myvars['footercontent']=$text;
+        add_filter('admin_footer_text', array($this,'change_footer_content'),9999,1);
+    }
+    /**
+     * change text of  version in footer in admin panel
+     * @param $text string
+     */
+    function change_footer_ver($text=''){
+        $this->myvars['footerversion']=$text;
+        add_filter( 'update_footer', array($this,'change_footer_version'), 9999);
+    }
+    /**
+     * remove admin menu
+     */
+    function remove_admin_menu(){
+        add_action('admin_menu', array($this,'remove_menu_elements'), 999);
+    }
+
 } 
