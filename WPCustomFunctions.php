@@ -681,5 +681,62 @@ class WPCustomFunctions extends HelperFunctions {
     function remove_admin_menu(){
         add_action('admin_menu', array($this,'remove_menu_elements'), 999);
     }
+    /**
+     * $html = '<p class="description">';
+     * $html .= 'Upload your PDF here.';
+     * $html .= '</p>';
+     * $html .= '<input type="file" id="wp_custom_attachment" name="wp_custom_attachment" value="" size="25" />';
+     *
+     * save_custom_meta_data($post_id,'passportimagead' );
+     *
+     * $imgurl=get_post_meta ( $post_id, 'passportimagead')['0']['url'];
+     *$imgtag="<img width='200' height='200' src='$imgurl' >";
+     *
+     * @param $postid
+     * @param $metaid
+     * @param array $supported_types
+     */
+    function save_custom_meta_data($postid,$metaid,$supported_types = array('image/png','image/jpeg','image/bmp','image/gif')) {
+        // Make sure the file array isn't empty
+        if(!empty($_FILES[$metaid]['name'])) {
+            // Get the file type of the upload
+            $arr_file_type = wp_check_filetype(basename($_FILES[$metaid]['name']));
+            $uploaded_type = $arr_file_type['type'];
+            // Check if the type is supported. If not, throw an error.
+            if(in_array($uploaded_type, $supported_types)) {
+                // Use the WordPress API to upload the file
+                $upload = wp_upload_bits($_FILES[$metaid]['name'], null, file_get_contents($_FILES[$metaid]['tmp_name']));
+                if(isset($upload['error']) && $upload['error'] != 0) {
+                    wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
+                } else {
+                    add_post_meta($postid, $metaid, $upload);
+                    update_post_meta($postid, $metaid, $upload);
+                } // end if/else
+            } else {
+                wp_die("The file type that you've uploaded is not Allowed.");
+            } // end if/else
+
+        } // end if
+    }
+
+    /**
+     * add title to wp_query
+     * $hotel_args = array (
+     *'post_type'              => 'hotel',
+     *'posts_per_page'         => 300,
+     *'post_status'            => 'Publish',
+     *'post_title_like'=>$hotel_name,
+     *'meta_query'             => array(
+     *array(
+     *'key'       => 'cities',
+     *'value'     => $city,
+     *'compare'   => '=',
+     *)
+     *)
+     *);
+     */
+    function add_title_to_wp_query(){
+        add_filter( 'posts_where', array($this,'title_like_posts_where'), 10, 2 );
+    }
 
 } 

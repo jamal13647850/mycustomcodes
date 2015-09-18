@@ -160,4 +160,18 @@ class HelperFunctions {
         unset($menu[75]); // remove tools link
         remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
     }
+
+    /**
+     * helper function for add title to meta of wp_query
+     * @param $where
+     * @param $wp_query
+     * @return string
+     */
+    function title_like_posts_where( $where, &$wp_query ) {
+        global $wpdb;
+        if ( $post_title_like = $wp_query->get( 'post_title_like' ) ) {
+            $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'' . esc_sql( $wpdb->esc_like( $post_title_like ) ) . '%\'';
+        }
+        return $where;
+    }
 }
