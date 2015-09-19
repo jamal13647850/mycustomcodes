@@ -21,7 +21,7 @@ class PGBarcode {
     }
 
     /**
-     * @param $text the data for barcode
+     * @param string $text the data for barcode
      * @param int $size size of width or height Therefore $orientation
      * @param string $orientation show vertical or horizontal barcode
      * @param string $code_type is code128 or code128b or code128a or code39 or code25 or codabar
