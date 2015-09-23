@@ -718,7 +718,56 @@ class WPCustomFunctions extends HelperFunctions {
 
         } // end if
     }
+    /**
+     * $html = '<p class="description">';
+     * $html .= 'Upload your PDF here.';
+     * $html .= '</p>';
+     * $html .= '<input type="file" id="wp_custom_attachment" name="wp_custom_attachment" value="" size="25" />';
+     *
+     * save_custom_meta_data($post_id,'passportimagead' );
+     *
+     * $imgurl=get_post_meta ( $post_id, 'passportimagead')['0']['url'];
+     *$imgtag="<img width='200' height='200' src='$imgurl' >";
+     *
+     * @param $postid
+     * @param $metaid
+     * @param array $supported_types
+     */
+    function save_custom_meta_data_to_custom_folder($id,$metaid,$custom_folder_name) {
+        // Make sure the file array isn't empty
+        if(!empty($_FILES[$metaid]['name'])) {
+            // Setup the array of supported file types. In this case, it's just PDF.
+            $supported_types = array('image/png','image/jpeg','image/bmp','image/gif');
+            // Get the file type of the upload
+            $arr_file_type = wp_check_filetype(basename($_FILES[$metaid]['name']));
+            $uploaded_type = $arr_file_type['type'];
+            // Check if the type is supported. If not, throw an error.
+            if(in_array($uploaded_type, $supported_types)) {
+                // Use the WordPress API to upload the file
+                //$upload = wp_upload_bits($_FILES[$metaid]['name'], null, file_get_contents($_FILES[$metaid]['tmp_name']));
+                $upload_dir = wp_upload_dir();
+                if (!file_exists($upload_dir['path'].'/'.$custom_folder_name)){
+                    mkdir($upload_dir['path'].'/'.$custom_folder_name);
+                }
+                $target_dir = $upload_dir['path'].'/'.$custom_folder_name.'/';
+                $target_file = $target_dir . basename($_FILES[$metaid]["name"]);
+                $upload['file']=$upload_dir['path'].'/'.$custom_folder_name.'/' . basename($_FILES[$metaid]["name"]);
+                $upload['url']=$upload_dir['url'].'/'.$custom_folder_name.'/' . basename($_FILES[$metaid]["name"]);;
+                $upload['error']='';
+                if(!move_uploaded_file($_FILES[$metaid]['tmp_name'], $target_file)) {
+                    wp_die('There was an error uploading your file. The error is: ' . $upload['error']);
+                } else {
+                    add_post_meta($id, $metaid, $upload);
+                    update_post_meta($id, $metaid, $upload);
+                } // end if/else
 
+            } else {
+                wp_die("The file type that you've uploaded is not a PDF.");
+            } // end if/else
+
+        } // end if
+
+    }
     /**
      * add title to wp_query
      * $hotel_args = array (
@@ -737,6 +786,32 @@ class WPCustomFunctions extends HelperFunctions {
      */
     function add_title_to_wp_query(){
         add_filter( 'posts_where', array($this,'title_like_posts_where'), 10, 2 );
+    }
+
+    /**
+     * return content of a post by post id
+     * @param $post_id integer
+     * @return mixed string
+     *
+     */
+    function get_the_content_by_id($post_id) {
+        $content_post = get_post($post_id);
+        $content = $content_post->post_content;
+        $content = apply_filters('the_content', $content);
+        $content = str_replace(']]>', ']]&gt;', $content);
+        return $content;
+    }
+
+    /**
+     * delete all files in a folder
+     * @param $folderpath
+     */
+    function Delete_all_files($folderpath){
+        $files = glob($folderpath.'/*'); // get all file names
+        foreach($files as $file){ // iterate files
+            if(is_file($file))
+                unlink($file); // delete file
+        }
     }
 
 } 
