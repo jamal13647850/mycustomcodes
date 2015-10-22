@@ -813,5 +813,23 @@ class WPCustomFunctions extends HelperFunctions {
                 unlink($file); // delete file
         }
     }
+    /**
+     * for check to run once code
+     * @param $key
+     * @return bool
+     * usage:if (run_once('add_user_role')){
+     *           //do you stuff and it will only run once
+     *          }
+     */
+    function run_once($key){
+        $test_case = get_option('run_once');
+        if (isset($test_case[$key]) && $test_case[$key]){
+            return false;
+        }else{
+            $test_case[$key] = true;
+            update_option('run_once',$test_case);
+            return true;
+        }
+    }
 
 } 

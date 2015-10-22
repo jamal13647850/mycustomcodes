@@ -28,4 +28,18 @@ class PGTaxonomies {
         add_action('init',array($this, 'RegiterTaxonomies'));
     }
 
+    /**
+     * get terms of custom taxonomy
+     * @param $postid
+     * @param $custom_taxonomy
+     */
+    function get_cpt_taxonomy($postid,$custom_taxonomy){
+        $terms = get_the_terms( $postid, $custom_taxonomy );
+        if ($terms){
+            foreach($terms as $term) {
+                echo '<a href="' . get_category_link( $term->term_id ) . '" title="' . sprintf( __( "View all posts in %s","vai" ), $term->name ) . '" ' . '>' . $term->name.'</a> , ';
+            }
+        }
+    }
+
 } 
