@@ -682,6 +682,12 @@ class WPCustomFunctions extends HelperFunctions {
         add_action('admin_menu', array($this,'remove_menu_elements'), 999);
     }
     /**
+     * remove dashboard widgets
+     */
+    function remove_widgets_of_dashboard() {
+        add_action('wp_dashboard_setup', array($this, 'remove_dashboard_widgets'), 9999);
+    }
+    /**
      * $html = '<p class="description">';
      * $html .= 'Upload your PDF here.';
      * $html .= '</p>';

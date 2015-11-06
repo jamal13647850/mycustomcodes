@@ -160,6 +160,52 @@ class HelperFunctions {
         unset($menu[75]); // remove tools link
         remove_submenu_page( 'plugins.php', 'plugin-editor.php' );
     }
+    /**
+     *helper function for remove dashboard wifgets
+     */
+    function remove_dashboard_widgets() {
+        global $wp_meta_boxes;
+
+
+        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_incoming_links']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_plugins']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_drafts']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
+        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
+        unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_secondary']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_activity']);
+        // bbpress
+        unset($wp_meta_boxes['dashboard']['normal']['core']['bbp-dashboard-right-now']);
+        // yoast seo
+        unset($wp_meta_boxes['dashboard']['normal']['core']['yoast_db_widget']);
+        // gravity forms
+        unset($wp_meta_boxes['dashboard']['normal']['core']['rg_forms_dashboard']);
+        unset($wp_meta_boxes['dashboard']['normal']['core']['woocommerce_persian_feed']);
+        // remove edd
+        remove_meta_box('edd_dashboard_sales', 'dashboard', 'core');
+        remove_action( 'welcome_panel', 'wp_welcome_panel' );
+
+        //remove_meta_box('persiangf_wd_hannanstd', 'dashboard', 'core');
+        /*remove woocomrce widget*/
+        unregister_widget( 'WC_Widget_Recent_Products' );
+
+        unregister_widget( 'WC_Widget_Featured_Products' );
+        unregister_widget( 'WC_Widget_Product_Categories' );
+        unregister_widget( 'WC_Widget_Product_Tag_Cloud' );
+        unregister_widget( 'WC_Widget_Cart' );
+        unregister_widget( 'WC_Widget_Layered_Nav' );
+        unregister_widget( 'WC_Widget_Layered_Nav_Filters' );
+        unregister_widget( 'WC_Widget_Price_Filter' );
+        unregister_widget( 'WC_Widget_Product_Search' );
+        unregister_widget( 'WC_Widget_Top_Rated_Products' );
+        unregister_widget( 'WC_Widget_Recent_Reviews' );
+        unregister_widget( 'WC_Widget_Recently_Viewed' );
+        unregister_widget( 'WC_Widget_Best_Sellers' );
+        unregister_widget( 'WC_Widget_Onsale' );
+        unregister_widget( 'WC_Widget_Random_Products' );
+    }
 
     /**
      * helper function for add title to meta of wp_query
@@ -173,5 +219,21 @@ class HelperFunctions {
             $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'' . esc_sql( $wpdb->esc_like( $post_title_like ) ) . '%\'';
         }
         return $where;
+    }
+    /**
+     * helper function to change from mail
+     * @param $old
+     * @return mixed
+     */
+    function new_mail_from($old) {
+        return ($this->myvars['mailfrom']);
+    }
+    /**
+     * helper function to change from name
+     * @param $old
+     * @return mixed
+     */
+    function new_mail_from_name($old) {
+        return ($this->myvars['mailname']);
     }
 }
