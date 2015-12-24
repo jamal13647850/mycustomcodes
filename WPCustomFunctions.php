@@ -6,7 +6,9 @@
  *@version 1.0.0
  *
  */
-require_once('HelperFunctions.php');
+namespace pgsavis\classes\wordpress\WPCustomFunctions;
+use pgsavis\classes\wordpress\HelperFunctions;
+//require_once('HelperFunctions.php');
 class WPCustomFunctions extends HelperFunctions {
     private $vars = array();
 

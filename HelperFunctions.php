@@ -6,6 +6,7 @@
  *@author Sayyed Jamal Ghasemi <jamal13647850@gmail.com>
  *@version 1.0.0
  */
+namespace pgsavis\classes\wordpress\HelperFunctions;
 class HelperFunctions {
 
     public $myvars = array();
