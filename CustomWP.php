@@ -5,6 +5,7 @@
   *@version 1.0.0
  * 
  */
+ namespace pgsavis;
 class CustomWP{
     private $vars = array() ;
     function __construct($param) {
@@ -180,9 +181,7 @@ class CustomWP{
                 #header-logo { background-image: url('.$this->vars['logo'].') !important; }
             </style>';
     }
-    function pgc_login_url() {
-        return get_bloginfo('url');
-    }
+
     function change_wp_login_title() {
 	return get_bloginfo();
     }
@@ -263,7 +262,7 @@ class CustomWP{
         add_action('admin_head', array($this,'hide_help'));
         add_action('login_head', array($this,'my_custom_login_logo'));
         add_action('admin_head', array($this,'custom_logo'));
-        add_filter('login_headerurl', array($this,'pgc_login_url'));
+
         add_filter('login_headertitle', array($this,'change_wp_login_title'),9999);
         add_filter('wp_mail_from', array($this,'new_mail_from'));
         add_filter('wp_mail_from_name', array($this,'new_mail_from_name'));
@@ -341,4 +340,5 @@ class CustomWP{
     function add_new_adminbar_link(){
         add_action('admin_bar_menu', array($this,'new_admin_bar_link'),100);
     }
+
 }

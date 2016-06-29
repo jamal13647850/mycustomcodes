@@ -5,6 +5,7 @@
  *@version 1.0.0
  *
  */
+ namespace pgsavis;
 class PGBarcode {
     private $vars = array();
     function __construct($param) {

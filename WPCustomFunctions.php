@@ -6,9 +6,8 @@
  *@version 1.0.0
  *
  */
-namespace pgsavis\classes\wordpress\WPCustomFunctions;
-use pgsavis\classes\wordpress\HelperFunctions;
-//require_once('HelperFunctions.php');
+namespace pgsavis;
+require_once('HelperFunctions.php');
 class WPCustomFunctions extends HelperFunctions {
     private $vars = array();
 
@@ -253,12 +252,8 @@ class WPCustomFunctions extends HelperFunctions {
      * Remove version from all stylee and scripts in header
      */
     function RemoveVersion(){
-        add_filter( 'style_loader_src', array($this,'t5_remove_version') );
-        add_filter( 'script_loader_src', array($this,'t5_remove_version') );
-        function t5_remove_version( $url )
-        {
-            return remove_query_arg( 'ver', $url );
-        }
+        add_filter( 'style_loader_src', array($this,'_remove_script_version') );
+        add_filter( 'script_loader_src', array($this,'_remove_script_version') );
     }
 
     /**
@@ -445,7 +440,7 @@ class WPCustomFunctions extends HelperFunctions {
         {
             $object = get_object_vars( $object );
         }
-        return array_map( 'objectToArray', $object );
+        return array_map( array($this,'objectToArray'), $object );
     }
     /**
      * @return mixed
@@ -839,5 +834,24 @@ class WPCustomFunctions extends HelperFunctions {
             return true;
         }
     }
-
+    function changemailfromname(){
+        add_filter('wp_mail_from', array($this,'new_mail_from'));
+        add_filter('wp_mail_from_name', array($this,'new_mail_from_name'));
+    }
+    function remove_wp_generator(){
+        remove_action('wp_head', 'wp_generator');
+    }
+    function wpcustom_logo($logo,$dashboard_logo){
+        $this->myvars['logo']=$logo;
+        $this->myvars['dashboard_logo']=$dashboard_logo;
+        add_action('login_head', array($this,'my_custom_login_logo'));
+        add_action('admin_head', array($this,'custom_logo'));
+        add_action('wp_before_admin_bar_render', array($this,'custom_logo'), 0);
+    }
+    function change_login_logo_url(){
+        add_filter('login_headerurl', array($this,'pgc_login_url'),116);
+    }
+    function change_login_logo_title(){
+        add_filter('login_headertitle', array($this,'pgc_login_title'),116);
+    }
 } 

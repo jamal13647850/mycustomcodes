@@ -6,7 +6,7 @@
  *@author Sayyed Jamal Ghasemi <jamal13647850@gmail.com>
  *@version 1.0.0
  */
-namespace pgsavis\classes\wordpress\HelperFunctions;
+namespace pgsavis;
 class HelperFunctions {
 
     public $myvars = array();
@@ -28,6 +28,8 @@ class HelperFunctions {
         $this->myvars['column_name']='';
         $this->myvars['facebook_icon_url']='../img/facebook.jpg';
         $this->myvars['twitter_icon_url']='../img/Twitter.png';
+        $this->myvars['mailfrom']='info@medicalinfo.ir';
+        $this->myvars['mailname']='سامانه جامع اطلاعات پزشکی';
 
     }
 
@@ -226,8 +228,9 @@ class HelperFunctions {
      * @param $old
      * @return mixed
      */
+
     function new_mail_from($old) {
-        return ($this->myvars['mailfrom']);
+        return ('info@medicalinfo.ir');
     }
     /**
      * helper function to change from name
@@ -235,6 +238,73 @@ class HelperFunctions {
      * @return mixed
      */
     function new_mail_from_name($old) {
-        return ($this->myvars['mailname']);
+        return ('سامانه جامع اطلاعات پزشکی');
+    }
+
+    /**
+     * remove ver query string from style and script
+     * @param $src
+     * @return mixed
+     */
+    function _remove_script_version($src ){
+        $parts = explode( '?ver', $src );
+        return $parts[0];
+    }
+    function my_custom_login_logo() {
+        echo '<style type="text/css">
+                h1 a {
+			background-image:url('.$this->myvars['logo'].') !important;
+		}
+		.login h1 a{
+			background-size: 100% auto !important;
+			width: 99px !important;
+			height:76px !important;
+		}
+		/*
+		#loginform {
+   			background-color:#B0B2B6;
+		}
+		.login label {
+  			color:#FFF;
+		}
+
+		.login .button-primary {
+    		background-image:none !important;
+    		background-color:#8f919d !important;
+    		border:1px solid #666 !important;
+    		-webkit-box-shadow: inset 0 1px 0 rgba(230,230,230,0.5) !important;
+    		box-shadow: inset 0 1px 0 rgba(230,230,230,0.5) !important;
+		}
+		.login .button-primary:hover {
+   			 background-color:#757580 !important;
+		}
+		*/
+        </style>';
+    }
+    function custom_logo() {
+        echo '<style type="text/css">
+                #header-logo { background-image: url('.$this->myvars['dashboard_logo'].') !important; }
+                #wp-admin-bar-wp-logo > .ab-item .ab-icon {
+background-image: url('.$this->myvars['dashboard_logo'].') !important;
+background-position: 0 0;
+}
+#wpadminbar #wp-admin-bar-wp-logo.hover > .ab-item .ab-icon {
+background-position: 0 0;
+}#wpadminbar #wp-admin-bar-wp-logo > .ab-item .ab-icon:before {
+                content: url('.$this->myvars['dashboard_logo'].')   !important;
+                top: 2px;
+            }
+
+            #wpadminbar #wp-admin-bar-wp-logo > a.ab-item {
+                pointer-events: none;
+                cursor: default;
+            }
+            </style>';
+    }
+    function pgc_login_url() {
+        return get_bloginfo('url');
+    }
+    function pgc_login_title() {
+        return get_bloginfo('description');
     }
 }

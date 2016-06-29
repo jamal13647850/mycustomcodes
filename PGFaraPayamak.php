@@ -5,9 +5,13 @@
  *@version 1.0.0
  *
  */
+namespace pgsavis;
+use SoapClient;
+
 class PGFaraPayamak {
     private $vars = array();
     private $WSDL = "http://87.107.121.54/post/send.asmx?wsdl";
+
     private $client;
     public function __construct($param) {
         // turn off the WSDL cache

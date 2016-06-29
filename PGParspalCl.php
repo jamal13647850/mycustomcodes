@@ -5,6 +5,7 @@
  *@version 1.0.0
  *
  */
+namespace pgsavis;
 class PGParspalCl {
     private $vars = array();
     /**

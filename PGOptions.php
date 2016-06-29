@@ -5,6 +5,7 @@
  *@version 1.0.0
  *
  */
+namespace pgsavis;
 class PGOptions {
     private $vars = array();
     public function __construct($param) {
@@ -27,18 +28,51 @@ class PGOptions {
     }
     public function save_options($newoptions){
             foreach ($this->vars['Options'] as $options):
-                update_option($options["id"],$newoptions[$options["id"].'_'.$this->vars['shortname']]);
+                switch($options['type']){
+                    case 'text':
+                        update_option($options["id"],$newoptions[$options["id"].'_'.$this->vars['shortname']]);
+                        break;
+                    case 'textarea':
+                        update_option($options["id"],$newoptions[$options["id"].'_'.$this->vars['shortname']]);
+                        break;
+                    case 'checkbox':
+                        update_option($options["id"],$newoptions[$options["id"].'_'.$this->vars['shortname']]);
+                        break;
+                }
+
             endforeach;
 
     }
     public function reset_options(){
         foreach ($this->vars['Options'] as $options):
-            update_option($options["id"],$options["std"]);
+            switch($options['type']){
+                case 'text':
+                    update_option($options["id"],$options["std"]);
+                    break;
+                case 'textarea':
+                    update_option($options["id"],$options["std"]);
+                    break;
+                case 'checkbox':
+                    update_option($options["id"],$options["std"]);
+                    break;
+            }
+
         endforeach;
     }
     public function get_options(){
+        $sval='';
         foreach ($this->vars['Options'] as $options):
-            $sval[$options["id"]]=get_option($options["id"],$options["std"]);
+            switch($options['type']){
+                case 'text':
+                    $sval[$options["id"]]=get_option($options["id"],$options["std"]);
+                    break;
+                case 'textarea':
+                    $sval[$options["id"]]=get_option($options["id"],$options["std"]);
+                    break;
+                case 'checkbox':
+                    $sval[$options["id"]]=get_option($options["id"],$options["std"]);
+                    break;
+            }
         endforeach;
         $this->vars['options_value']=$sval;
         return $this->vars['options_value'];
@@ -60,33 +94,52 @@ class PGOptions {
                     </tr>
                     <?php foreach ($this->vars['Options'] as $optins): ?>
                         <tr>
-                            <td style="width:250px;"><label for="<?php echo $optins["id"] ?>"><?php echo $optins["desc"] ?></label>
-                            </td>
-                            <td>
-                                <input name="<?php echo $optins["id"].'_'.$this->vars['shortname'] ?>"
-                                       id="<?php echo $optins["id"] ?>" value="<?php echo $sval[$optins["id"]] ?>" type="text" />
-                            </td>
+                            <?php echo $this->create_field($optins["name"],$optins["desc"],$optins["id"],$optins["type"],$optins["std"],$sval[$optins["id"]]) ?>
                         </tr>
                     <?php endforeach; ?>
                     <tr>
                         <td colspan="2">
-                            <input name="Savesubmit" value='<?php echo __("Save","PG-AdsManager") ?>' type="submit" />
-                            <input name="Resetsubmit" value='<?php echo __("Reset","PG-AdsManager") ?>' type="submit" />
+                            <input name="Savesubmit" value='<?php echo __("Save","dr-gmap") ?>' type="submit" />
+                            <input name="Resetsubmit" value='<?php echo __("Reset","dr-gmap") ?>' type="submit" />
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width:350px;">
-                        <a href="http://www.pgsavis.com"><?php echo __('Plugin Name: ','PG-PA').$this->vars['pluginname']; ?></a>
-                        <br>
-                        <a href="http://www.pgsavis.com"><?php echo __('Plugin Developer: Sayyed Jamal Ghasemi','PG-PA'); ?></a>
-                        <br>
-                        <a href="http://www.pgsavis.com"><?php echo __('Plugin Website: http://www.pgsavis.com','PG-PA'); ?></a>
                         </td>
                     </tr>
                 </table>
             </form>
         </div>
     <?php
+    }
+    private function create_field($name,$desc,$id,$type,$std,$value){
+        $return='';
+        switch($type){
+            case 'header':
+                $return="<td style=\"width:250px;\"><h3>".$desc." </h3></td>";
+                break;
+            case 'text':
+                $return="<td style=\"width:250px;\"><label for=\"". $id ."\">".$desc ."</label></td>";
+                $newname=$id."_".$this->vars['shortname'];
+                $return.=" <td>
+                <input name=\"". $newname ."\"
+                   id=\"". $id ."\" value=\"". $value ."\" type=\"text\" />
+                </td>";
+                break;
+            case 'textarea':
+                $return="<td style=\"width:250px;\"><label for=\"". $id ."\">".$desc ."</label></td>";
+                $newname=$id."_".$this->vars['shortname'];
+                $return.=" <td>
+                <textarea name=\"". $newname ."\"
+                   id=\"". $id ."\"   />".$value."</textarea>
+                </td>";
+                break;
+            case 'checkbox':
+                $return="<td style=\"width:250px;\"><label for=\"". $id ."\">".$desc ."</label></td>";
+                $newname=$id."_".$this->vars['shortname'];
+                $return.=" <td>
+                <input name=\"". $newname ."\"
+                   id=\"". $id ."\" ". checked($value,'on',false) ." type=\"checkbox\" />
+                </td>";
+                break;
+        }
+        return $return;
     }
 } 
