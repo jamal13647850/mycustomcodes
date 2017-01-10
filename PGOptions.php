@@ -39,7 +39,7 @@ class PGOptions {
                         update_option($options["id"],$newoptions[$options["id"].'_'.$this->vars['shortname']]);
                         break;
                 }
-
+                do_action('pg_after_save_options',$options["id"],$newoptions[$options["id"].'_'.$this->vars['shortname']]);
             endforeach;
 
     }
@@ -119,7 +119,7 @@ class PGOptions {
                 $return="<td style=\"width:250px;\"><label for=\"". $id ."\">".$desc ."</label></td>";
                 $newname=$id."_".$this->vars['shortname'];
                 $return.=" <td>
-                <input name=\"". $newname ."\"
+                <input style=\"width:250px;\" name=\"". $newname ."\"
                    id=\"". $id ."\" value=\"". $value ."\" type=\"text\" />
                 </td>";
                 break;
@@ -137,6 +137,11 @@ class PGOptions {
                 $return.=" <td>
                 <input name=\"". $newname ."\"
                    id=\"". $id ."\" ". checked($value,'on',false) ." type=\"checkbox\" />
+                </td>";
+                break;
+            case 'hr':
+                $return.=" <td>
+                <hr>
                 </td>";
                 break;
         }

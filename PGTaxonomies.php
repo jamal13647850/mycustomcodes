@@ -5,7 +5,7 @@
  *@version 1.0.0
  *
  */
-namespace pgsavis;
+namespace medicalinfo;
 class PGTaxonomies {
     private $vars = array();
     public function __construct($param) {
