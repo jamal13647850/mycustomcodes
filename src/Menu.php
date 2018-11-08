@@ -1,12 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: jamal13647850
+ * @author Sayyed Jamal Ghasemi <https://www.linkedin.com/in/jamal1364/>
  * Date: 03/09/2016
  * Time: 09:33 AM
  */
 
-namespace pgsavis;
+namespace pgsavis\mycustomcodes;
 
 
 class Menu {
@@ -20,7 +19,7 @@ class Menu {
         if(!function_exists('wp_get_current_user')) {
             include(ABSPATH . "wp-includes/pluggable.php");
         }
-        $this->vars['currentresult']='look';
+        $this->vars['currentresult']=$this->currentresult;
     }
     public function __set($name, $value) {
         $this->vars[$name] = $value ;
@@ -48,7 +47,7 @@ class Menu {
 
 
     public function AddSubmenuPage( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = '' ){
-        $this->submenu=new submenu(array());
+        $this->submenu=new submenu();
         $this->submenu->sub_parent_slug =$parent_slug ;
         $this->submenu->sub_page_title =$page_title ;
         $this->submenu->sub_menu_title = $menu_title ;

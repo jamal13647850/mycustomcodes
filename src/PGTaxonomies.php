@@ -1,11 +1,10 @@
 <?php
 /**
- *@author Sayyed Jamal Ghasemi
- *@author Sayyed Jamal Ghasemi <jamal13647850@gmail.com>
+ *@author Sayyed Jamal Ghasemi <https://www.linkedin.com/in/jamal1364/>
  *@version 1.0.0
  *
  */
-namespace pgsavis;
+namespace pgsavis\mycustomcodes;
 class PGTaxonomies {
     private $vars = array();
     public function __construct($param) {

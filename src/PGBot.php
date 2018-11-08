@@ -1,12 +1,11 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Jamal
+ * @author Sayyed Jamal Ghasemi <https://www.linkedin.com/in/jamal1364/>
  * Date: 12/14/2016
  * Time: 10:11 PM
  */
 
-namespace pgsavis;
+namespace pgsavis\mycustomcodes;
 
 
 class PGBot{

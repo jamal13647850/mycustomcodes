@@ -8,5 +8,11 @@
             "email": "jamal13647850@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload" : {
+        "psr-4" :{
+            "pgsavis\\mycustomcodes\\" : "src/"
+        }
+    }
+
 }
