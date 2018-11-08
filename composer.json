@@ -1,0 +1,12 @@
+{
+    "name": "pgsavis/mycustomcodes",
+    "description": "These are useful functions and classes for php and wordpress",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sayyed Jamal Ghasemi",
+            "email": "jamal13647850@gmail.com"
+        }
+    ],
+    "require": {}
+}
