@@ -1,5 +1,6 @@
 <?php
-namespace pgsavis;
+use medicalinfo\DBManager;
+use medicalinfo\HtmlElements;
 
 /**
  *@author Sayyed Jamal Ghasemi
@@ -7,6 +8,7 @@ namespace pgsavis;
  *@version 1.0.0
  *
  */
+ namespace pgsavis;
 class PGMetaBox {
     private $vars = array();
     public function __construct($param) {
@@ -95,7 +97,7 @@ class PGMetaBox {
 
             }
             if ($field['type']=='checkbox'){
-                $field['value']=get_post_meta($post->ID, $field['name'], true);
+                $field['value']=get_post_meta($post->ID, $field['name'], true);;
 
                 $result="<tr><td>";
                 $result.="<input type=\"checkbox\"  name=\"". $field['name'] ."\" value=\"" . 'on' . "\" ". $field['disabled']." ".checked( 'on', $field['value'],false )."/>".__($field['label']);

@@ -28,7 +28,7 @@ class HelperFunctions {
         $this->myvars['column_name']='';
         $this->myvars['facebook_icon_url']='../img/facebook.jpg';
         $this->myvars['twitter_icon_url']='../img/Twitter.png';
-        $this->myvars['mailfrom']='info@pgsavis.ir';
+        $this->myvars['mailfrom']='info@medicalinfo.ir';
         $this->myvars['mailname']='سامانه جامع اطلاعات پزشکی';
 
     }
@@ -230,7 +230,7 @@ class HelperFunctions {
      */
 
     function new_mail_from($old) {
-        return ('info@pgsavis.ir');
+        return ('info@medicalinfo.ir');
     }
     /**
      * helper function to change from name
