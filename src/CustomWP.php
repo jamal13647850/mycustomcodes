@@ -4,11 +4,11 @@
   *@version 1.0.0
  * 
  */
-namespace pgsavis\mycustomcodes;
+namespace jamal13647850\mycustomcodes;
 class CustomWP{
     private $vars = array() ;
     function __construct($param) {
-        isset($param['footercontent'])?$this->vars['footercontent']=$param['footercontent']:$this->vars['footercontent']='<a class="text-center" href="http://www.pgsavis.com">طراحی و اجرا پدیده گستر ساویس</a>';
+        isset($param['footercontent'])?$this->vars['footercontent']=$param['footercontent']:$this->vars['footercontent']='<a class="text-center" href="http://www.jamal13647850.com">طراحی و اجرا پدیده گستر ساویس</a>';
         isset($param['footerversion'])?$this->vars['footerversion']=$param['footerversion']:$this->vars['footerversion']='';
         isset($param['deactiveplugin'])?$this->vars['deactiveplugin']=$param['deactiveplugin']:$this->vars['deactiveplugin']=array();
         isset($param['logo'])?$this->vars['logo']=$param['logo']:$this->vars['logo']='';
@@ -333,7 +333,7 @@ class CustomWP{
      * قبل از فراخوانی این تابع باید آرایه زیر مقدار دهی شود
      * $cw->newadminbarlink=array('id'=>'id_mylink',
     'title'=>'طراحی و اجرا: پدیده گستر ساویس',
-    'href'=>'http://www.pgsavis.com');
+    'href'=>'http://www.jamal13647850.com');
      * 
      */
     function add_new_adminbar_link(){

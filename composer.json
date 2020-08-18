@@ -1,17 +1,15 @@
 {
-    "name": "pgsavis/mycustomcodes",
+    "name": "jamal13647850/mycustomcodes",
     "description": "These are useful functions and classes for php and wordpress",
     "type": "library",
-    "authors": [
-        {
-            "name": "Sayyed Jamal Ghasemi",
-            "email": "jamal13647850@gmail.com"
-        }
-    ],
+    "authors": [{
+        "name": "Sayyed Jamal Ghasemi",
+        "email": "jamal13647850@gmail.com"
+    }],
     "require": {},
-    "autoload" : {
-        "psr-4" :{
-            "pgsavis\\mycustomcodes\\" : "src/"
+    "autoload": {
+        "psr-4": {
+            "jamal13647850\\mycustomcodes\\": "src/"
         }
     }
 

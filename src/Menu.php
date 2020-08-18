@@ -5,7 +5,7 @@
  * Time: 09:33 AM
  */
 
-namespace pgsavis\mycustomcodes;
+namespace jamal13647850\mycustomcodes;
 
 
 class Menu {

@@ -5,7 +5,7 @@
  * Time: 10:54 PM
  */
 
-namespace pgsavis\mycustomcodes;
+namespace jamal13647850\mycustomcodes;
 
 
 use finfo;

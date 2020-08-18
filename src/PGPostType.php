@@ -4,7 +4,7 @@
  *@version 1.0.0
  *
  */
-namespace pgsavis\mycustomcodes;
+namespace jamal13647850\mycustomcodes;
 class PGPostType {
     private $vars = array();
     public function __construct($param) {
