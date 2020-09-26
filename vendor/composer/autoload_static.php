@@ -6,10 +6,25 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit3f0302a2852090aa2a95a6cfeee6ef26
 {
+    public static $files = array (
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'j' => 
         array (
-            'jamal13647850\\mycustomcodes\\' => 28,
+            'jamal\\wpmstructure\\' => 19,
+            'jamal\\mycustomcodes\\' => 20,
+        ),
+        'T' => 
+        array (
+            'Twig\\' => 5,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
         'P' => 
         array (
@@ -22,9 +37,25 @@ class ComposerStaticInit3f0302a2852090aa2a95a6cfeee6ef26
     );
 
     public static $prefixDirsPsr4 = array (
-        'jamal13647850\\mycustomcodes\\' => 
+        'jamal\\wpmstructure\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/pgsavis/wp-plugin-structure/src',
+        ),
+        'jamal\\mycustomcodes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'Psr\\Log\\' => 
         array (

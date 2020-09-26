@@ -4,7 +4,8 @@
  *@author Sayyed Jamal Ghasemi <https://www.linkedin.com/in/jamal1364/>
  *@version 1.0.0
  */
-namespace jamal13647850\mycustomcodes;
+namespace jamal\mycustomcodes;
+;
 class HelperFunctions {
 
     public $myvars = array();

@@ -5,7 +5,8 @@
  * Time: 09:33 AM
  */
 
-namespace jamal13647850\mycustomcodes;
+namespace jamal\mycustomcodes;
+;
 
 
 class Menu {

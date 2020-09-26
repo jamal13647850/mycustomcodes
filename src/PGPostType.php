@@ -4,7 +4,8 @@
  *@version 1.0.0
  *
  */
-namespace jamal13647850\mycustomcodes;
+namespace jamal\mycustomcodes;
+;
 class PGPostType {
     private $vars = array();
     public function __construct($param) {

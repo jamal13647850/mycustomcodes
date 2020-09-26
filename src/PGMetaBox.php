@@ -7,7 +7,8 @@ use medicalinfo\HtmlElements;
  *@version 1.0.0
  *
  */
- namespace jamal13647850\mycustomcodes;
+ namespace jamal\mycustomcodes;
+;
 class PGMetaBox {
     private $vars = array();
     public function __construct($param) {

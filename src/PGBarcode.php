@@ -4,7 +4,8 @@
  *@version 1.0.0
  *
  */
- namespace jamal13647850\mycustomcodes;
+ namespace jamal\mycustomcodes;
+;
 class PGBarcode {
     private $vars = array();
     function __construct($param) {

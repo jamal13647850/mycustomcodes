@@ -1,5 +1,6 @@
 <?php
-namespace jamal13647850\mycustomcodes;
+namespace jamal\mycustomcodes;
+;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 class MonoLogFactory{

@@ -5,7 +5,8 @@
  * Time: 10:54 PM
  */
 
-namespace jamal13647850\mycustomcodes;
+namespace jamal\mycustomcodes;
+;
 
 
 use finfo;

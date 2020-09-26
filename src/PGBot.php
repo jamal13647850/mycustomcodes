@@ -5,7 +5,8 @@
  * Time: 10:11 PM
  */
 
-namespace jamal13647850\mycustomcodes;
+namespace jamal\mycustomcodes;
+;
 
 
 class PGBot{
@@ -48,14 +49,7 @@ class PGBot{
 
 
     }
-    public function mailtrap($phpmailer) {
-        $phpmailer->isSMTP();
-        $phpmailer->Host = 'mailtrap.io';
-        $phpmailer->SMTPAuth = true;
-        $phpmailer->Port = 2525;
-        $phpmailer->Username = '857b26d6a3cc50';
-        $phpmailer->Password = '447ce5f6307d82';
-    }
+    
     /**
      * @param string $SLACK_WEBHOOK
      * @return PGBot
