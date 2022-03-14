@@ -13,7 +13,7 @@ class PGPostType {
         $this->vars['menu_title']='menu_title';
         $this->vars['capability']='edit_posts';
         $this->vars['menu_slug']='menu_slug';
-        $this->vars['output']=__('Created By Sayyed Jamal Ghasemi www.medicalinfo.ir');
+        $this->vars['output']=__('Created By Sayyed Jamal Ghasemi jamalghasemi.com');
         $this->vars['posts_per_page']=-1;
     }
     public function __set($name, $value) {

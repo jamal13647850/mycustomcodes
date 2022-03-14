@@ -1,6 +1,4 @@
 <?php
-use medicalinfo\DBManager;
-use medicalinfo\HtmlElements;
 
 /**
  *@author Sayyed Jamal Ghasemi <https://www.linkedin.com/in/jamal1364/>
