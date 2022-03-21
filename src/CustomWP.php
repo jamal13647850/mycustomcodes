@@ -340,4 +340,6 @@ class CustomWP{
         add_action('admin_bar_menu', array($this,'new_admin_bar_link'),100);
     }
 
+    
+
 }
