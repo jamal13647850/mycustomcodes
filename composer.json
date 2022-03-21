@@ -7,8 +7,7 @@
         "email": "jamal13647850@gmail.com"
     }],
     "require": {
-        "monolog/monolog": "^2.1",
-        "pgsavis/wp-plugin-structure": "^2.0"
+        "monolog/monolog": "^2.1"
     },
     "autoload": {
         "psr-4": {
