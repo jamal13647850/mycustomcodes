@@ -33,18 +33,20 @@ class PGCustomWP{
         // add_filter( 'script_loader_src', array($this,'port_remove_cssjs_ver'), 10, 2 );
     }
 
-    public function setFooterContent(string $footerContent):PGCustomWP{
-        $this->footerContent=$footerContent;
-        return $this;
-    }
-    public function changeFooterContentHookInto(){
-        $CI = $this;
-        add_filter('admin_footer_text', function() use ($CI){
-            echo ($CI->footerContent);
+    // public function setFooterContent(string $footerContent):PGCustomWP{
+    //     $this->footerContent=$footerContent;
+    //     return $this;
+    // }
+    // public function changeFooterContentHookInto(){
+    //     $CI = $this;
+    //     add_filter('admin_footer_text', function() use ($CI){
+    //         echo ($CI->footerContent);
+    //     },9999,1);
+    // }
+    public function changeFooterContent(string $footerContent){
+        add_filter('admin_footer_text', function() use ($footerContent){
+            echo ($footerContent);
         },9999,1);
-    }
-    public function changeFooterContent(){
-        echo ($this->footerContent);
     }
 
     public function createTable(string $createQuery){
