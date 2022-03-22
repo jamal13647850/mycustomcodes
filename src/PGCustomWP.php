@@ -429,6 +429,7 @@ class PGCustomWP
 
     public function createTable(string $createQuery)
     {
+        require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta($createQuery);
     }
 }
