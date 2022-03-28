@@ -172,6 +172,26 @@ class WC {
 		}
 	}
 
+	public function MayBeVariable( $product ):array|int {
+
+		$product_id = $this->ProductId( $product );
+		$product    = wc_get_product( $product_id );
+		if ( $product->is_type( 'variable' ) ) {
+
+			unset( $product_id );
+
+			$product_ids = array();
+			foreach ( (array) $this->ProductProp( $product, 'children' ) as $product_id ) {
+				//$product_ids[] = wc_get_product( $product_id );
+				$product_ids[] = $product_id;
+			}
+
+			return $product_ids;//array
+		} else {
+			return $product_id;//int
+		}
+	}
+
     public function MaybeVariableProductTitle( $product ) {
 
 		$product_id = $this->ProductId( $product );
