@@ -338,12 +338,12 @@ class WC {
 
 	public function mergeOrderTags($content, $order_status, $order, $vendor_items_array = array())
 	{
-		$wc = new WC();
+		
 		$order_id = $order->get_id();
 		$price    = strip_tags($order->get_formatted_order_total());
 		$price    = html_entity_decode($price);
 
-		$all_product_list = $wc->AllItems($order);
+		$all_product_list = $this->AllItems($order);
 		$all_product_ids  = !empty($all_product_list['product_ids']) ? $all_product_list['product_ids'] : array();
 		$all_items        = !empty($all_product_list['items']) ? $all_product_list['items'] : array();
 		$all_items_qty    = !empty($all_product_list['items_qty']) ? $all_product_list['items_qty'] : array();
@@ -359,46 +359,46 @@ class WC {
 			$payment_gateways = WC()->payment_gateways->payment_gateways();
 		}
 
-		$payment_method  = $wc->OrderProp($order, 'payment_method');
+		$payment_method  = $this->OrderProp($order, 'payment_method');
 		$payment_method  = (isset($payment_gateways[$payment_method]) ? esc_html($payment_gateways[$payment_method]->get_title()) : esc_html($payment_method));
-		$shipping_method = esc_html($wc->OrderProp($order, 'shipping_method'));
+		$shipping_method = esc_html($this->OrderProp($order, 'shipping_method'));
 
 		$country = WC()->countries;
 
-		$bill_country = (isset($country->countries[$wc->OrderProp($order, 'billing_country')])) ? $country->countries[$wc->OrderProp($order, 'billing_country')] : $wc->OrderProp($order, 'billing_country');
-		$bill_state   = ($wc->OrderProp($order, 'billing_country') && $wc->OrderProp($order, 'billing_state') && isset($country->states[$wc->OrderProp($order, 'billing_country')][$wc->OrderProp($order, 'billing_state')])) ? $country->states[$wc->OrderProp($order, 'billing_country')][$wc->OrderProp($order, 'billing_state')] : $wc->OrderProp($order, 'billing_state');
+		$bill_country = (isset($country->countries[$this->OrderProp($order, 'billing_country')])) ? $country->countries[$this->OrderProp($order, 'billing_country')] : $this->OrderProp($order, 'billing_country');
+		$bill_state   = ($this->OrderProp($order, 'billing_country') && $this->OrderProp($order, 'billing_state') && isset($country->states[$this->OrderProp($order, 'billing_country')][$this->OrderProp($order, 'billing_state')])) ? $country->states[$this->OrderProp($order, 'billing_country')][$this->OrderProp($order, 'billing_state')] : $this->OrderProp($order, 'billing_state');
 
-		$shipp_country = (isset($country->countries[$wc->OrderProp($order, 'shipping_country')])) ? $country->countries[$wc->OrderProp($order, 'shipping_country')] : $wc->OrderProp($order, 'shipping_country');
-		$shipp_state   = ($wc->OrderProp($order, 'shipping_country') && $wc->OrderProp($order, 'shipping_state') && isset($country->states[$wc->OrderProp($order, 'shipping_country')][$wc->OrderProp($order, 'shipping_state')])) ? $country->states[$wc->OrderProp($order, 'shipping_country')][$wc->OrderProp($order, 'shipping_state')] : $wc->OrderProp($order, 'shipping_state');
+		$shipp_country = (isset($country->countries[$this->OrderProp($order, 'shipping_country')])) ? $country->countries[$this->OrderProp($order, 'shipping_country')] : $this->OrderProp($order, 'shipping_country');
+		$shipp_state   = ($this->OrderProp($order, 'shipping_country') && $this->OrderProp($order, 'shipping_state') && isset($country->states[$this->OrderProp($order, 'shipping_country')][$this->OrderProp($order, 'shipping_state')])) ? $country->states[$this->OrderProp($order, 'shipping_country')][$this->OrderProp($order, 'shipping_state')] : $this->OrderProp($order, 'shipping_state');
 
 		$post = get_post($order_id);
 
 		$tags = array(
-			'{b_first_name}'  => $wc->OrderProp($order, 'billing_first_name'),
-			'{b_last_name}'   => $wc->OrderProp($order, 'billing_last_name'),
-			'{b_company}'     => $wc->OrderProp($order, 'billing_company'),
-			'{b_address_1}'   => $wc->OrderProp($order, 'billing_address_1'),
-			'{b_address_2}'   => $wc->OrderProp($order, 'billing_address_2'),
+			'{b_first_name}'  => $this->OrderProp($order, 'billing_first_name'),
+			'{b_last_name}'   => $this->OrderProp($order, 'billing_last_name'),
+			'{b_company}'     => $this->OrderProp($order, 'billing_company'),
+			'{b_address_1}'   => $this->OrderProp($order, 'billing_address_1'),
+			'{b_address_2}'   => $this->OrderProp($order, 'billing_address_2'),
 			'{b_state}'       => $bill_state,
-			'{b_city}'        => $wc->OrderProp($order, 'billing_city'),
-			'{b_postcode}'    => $wc->OrderProp($order, 'billing_postcode'),
+			'{b_city}'        => $this->OrderProp($order, 'billing_city'),
+			'{b_postcode}'    => $this->OrderProp($order, 'billing_postcode'),
 			'{b_country}'     => $bill_country,
-			'{sh_first_name}' => $wc->OrderProp($order, 'shipping_first_name'),
-			'{sh_last_name}'  => $wc->OrderProp($order, 'shipping_last_name'),
-			'{sh_company}'    => $wc->OrderProp($order, 'shipping_company'),
-			'{sh_address_1}'  => $wc->OrderProp($order, 'shipping_address_1'),
-			'{sh_address_2}'  => $wc->OrderProp($order, 'shipping_address_2'),
+			'{sh_first_name}' => $this->OrderProp($order, 'shipping_first_name'),
+			'{sh_last_name}'  => $this->OrderProp($order, 'shipping_last_name'),
+			'{sh_company}'    => $this->OrderProp($order, 'shipping_company'),
+			'{sh_address_1}'  => $this->OrderProp($order, 'shipping_address_1'),
+			'{sh_address_2}'  => $this->OrderProp($order, 'shipping_address_2'),
 			'{sh_state}'      => $shipp_state,
-			'{sh_city}'       => $wc->OrderProp($order, 'shipping_city'),
-			'{sh_postcode}'   => $wc->OrderProp($order, 'shipping_postcode'),
+			'{sh_city}'       => $this->OrderProp($order, 'shipping_city'),
+			'{sh_postcode}'   => $this->OrderProp($order, 'shipping_postcode'),
 			'{sh_country}'    => $shipp_country,
 			'{phone}'         => get_post_meta($order_id, '_billing_phone', true),
 			'{mobile}'        => get_user_meta($order->get_customer_id(), 'billing_mobile_number', true),
-			'{email}'         => $wc->OrderProp($order, 'billing_email'),
-			'{order_id}'      => $wc->OrderProp($order, 'order_number'),
-			'{date}'          => $wc->OrderDate($order),
+			'{email}'         => $this->OrderProp($order, 'billing_email'),
+			'{order_id}'      => $this->OrderProp($order, 'order_number'),
+			'{date}'          => $this->OrderDate($order),
 			'{post_id}'       => $order_id,
-			'{status}'        => $wc->statusName($order_status, true),
+			'{status}'        => $this->statusName($order_status, true),
 			'{price}'         => $price,
 
 			'{all_items}'     => implode(' - ', $all_items),
@@ -422,5 +422,27 @@ class WC {
 
 
 		return $content;
+	}
+
+	public function mergeProductTags( $message, $product_id, $parent_product_id ) {
+		
+		
+
+		$product = wc_get_product( $product_id );
+
+		
+		$tags = array(
+			'{product_id}'    => $parent_product_id,
+			'{product_title}' => $this->MaybeVariableProductTitle( $product ),
+			'{regular_price}' => strip_tags( wc_price( $this->ProductProp( $product, 'regular_price' ) ) ),
+			'{onsale_price}'  => strip_tags( wc_price( $this->ProductProp( $product, 'sale_price' ) ) ),
+			'{stock}'         => $this->ProductStockQty( $product ),
+		);
+
+		$content =$message;
+
+		return str_replace( array( '<br>', '<br>', '<br />', '&nbsp;' ),
+			array( '', '', '', ' ' ),
+			str_replace( array_keys( $tags ), array_values( $tags ), $content ) );
 	}
 }
