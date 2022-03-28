@@ -237,4 +237,82 @@ class WC {
     public function orderId( $order ) {
 		return $this->OrderProp( $order, 'id' );
 	}
+
+    public function OrderDate( $order ) {
+
+		$order_date = $this->OrderProp( $order, 'date_paid' );
+		if ( empty( $order_date ) ) {
+			$order_date = $this->OrderProp( $order, 'date_created' );
+		}
+		if ( empty( $order_date ) ) {
+			$order_date = $this->OrderProp( $order, 'date_modified' );
+		}
+		if ( ! empty( $order_date ) ) {
+			if ( method_exists( $order_date, 'getOffsetTimestamp' ) ) {
+				$order_date = gmdate( 'Y-m-d H:i:s', $order_date->getOffsetTimestamp() );
+			}
+		} else {
+			$order_date = date_i18n( 'Y-m-d H:i:s' );
+		}
+
+		return $this->mayBeJalaliDate( $order_date );
+	}
+
+    public function mayBeJalaliDate( $date_time ) {
+
+		if ( empty( $date_time ) ) {
+			return '';
+		}
+
+		$_date_time = explode( ' ', $date_time );
+		$date       = ! empty( $_date_time[0] ) ? explode( '-', $_date_time[0], 3 ) : '';
+		$time       = ! empty( $_date_time[1] ) ? $_date_time[1] : '';
+
+		if ( count( $date ) != 3 || $date[0] < 2000 ) {
+			return $date_time;
+		}
+
+		list( $year, $month, $day ) = $date;
+
+		$date = $this->JalaliDate( $year, $month, $day, '/' ) . ' - ' . $time;
+
+		return trim( trim( $date ), '- ' );
+	}
+
+	//از سایت jdf
+	public function JalaliDate( $g_y, $g_m, $g_d, $mod = '' ) {
+		$d_4   = $g_y % 4;
+		$g_a   = array( 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 );
+		$doy_g = $g_a[ (int) $g_m ] + $g_d;
+		if ( $d_4 == 0 and $g_m > 2 ) {
+			$doy_g ++;
+		}
+		$d_33 = (int) ( ( ( $g_y - 16 ) % 132 ) * .0305 );
+		$a    = ( $d_33 == 3 or $d_33 < ( $d_4 - 1 ) or $d_4 == 0 ) ? 286 : 287;
+		$b    = ( ( $d_33 == 1 or $d_33 == 2 ) and ( $d_33 == $d_4 or $d_4 == 1 ) ) ? 78 : ( ( $d_33 == 3 and $d_4 == 0 ) ? 80 : 79 );
+		if ( (int) ( ( $g_y - 10 ) / 63 ) == 30 ) {
+			$a --;
+			$b ++;
+		}
+		if ( $doy_g > $b ) {
+			$jy    = $g_y - 621;
+			$doy_j = $doy_g - $b;
+		} else {
+			$jy    = $g_y - 622;
+			$doy_j = $doy_g + $a;
+		}
+		if ( $doy_j < 187 ) {
+			$jm = (int) ( ( $doy_j - 1 ) / 31 );
+			$jd = $doy_j - ( 31 * $jm ++ );
+		} else {
+			$jm = (int) ( ( $doy_j - 187 ) / 30 );
+			$jd = $doy_j - 186 - ( $jm * 30 );
+			$jm += 7;
+		}
+
+		$jd = $jd > 9 ? $jd : '0' . $jd;
+		$jm = $jm > 9 ? $jm : '0' . $jm;
+
+		return ( $mod == '' ) ? array( $jy, $jm, $jd ) : $jy . $mod . $jm . $mod . $jd;
+	}
 }
