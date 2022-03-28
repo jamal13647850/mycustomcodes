@@ -326,4 +326,18 @@ class PGFunctions
 
         return $user_role;
     }
+
+    public function toEnglishNumber( $number) {
+	
+
+			
+
+			$number= str_ireplace( array( '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' ),
+				array( '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ), $number); //farsi
+			$number= str_ireplace( array( '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩' ),
+				array( '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ), $number); //arabi
+
+			return $number;
+		
+	}
 }
