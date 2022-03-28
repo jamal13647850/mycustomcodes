@@ -335,4 +335,92 @@ class WC {
 
 		return ( $mod == '' ) ? array( $jy, $jm, $jd ) : $jy . $mod . $jm . $mod . $jd;
 	}
+
+	public function mergeOrderTags($content, $order_status, $order, $vendor_items_array = array())
+	{
+		$wc = new WC();
+		$order_id = $order->get_id();
+		$price    = strip_tags($order->get_formatted_order_total());
+		$price    = html_entity_decode($price);
+
+		$all_product_list = $wc->AllItems($order);
+		$all_product_ids  = !empty($all_product_list['product_ids']) ? $all_product_list['product_ids'] : array();
+		$all_items        = !empty($all_product_list['items']) ? $all_product_list['items'] : array();
+		$all_items_qty    = !empty($all_product_list['items_qty']) ? $all_product_list['items_qty'] : array();
+
+		$vendor_product_ids = !empty($vendor_items_array['product_ids']) ? $vendor_items_array['product_ids'] : array();
+		$vendor_items       = !empty($vendor_items_array['items']) ? $vendor_items_array['items'] : array();
+		$vendor_items_qty   = !empty($vendor_items_array['items_qty']) ? $vendor_items_array['items_qty'] : array();
+		$vendor_price       = !empty($vendor_items_array['price']) ? array_sum((array) $vendor_items_array['price']) : 0;
+		$vendor_price       = strip_tags(wc_price($vendor_price));
+
+		$payment_gateways = array();
+		if (WC()->payment_gateways()) {
+			$payment_gateways = WC()->payment_gateways->payment_gateways();
+		}
+
+		$payment_method  = $wc->OrderProp($order, 'payment_method');
+		$payment_method  = (isset($payment_gateways[$payment_method]) ? esc_html($payment_gateways[$payment_method]->get_title()) : esc_html($payment_method));
+		$shipping_method = esc_html($wc->OrderProp($order, 'shipping_method'));
+
+		$country = WC()->countries;
+
+		$bill_country = (isset($country->countries[$wc->OrderProp($order, 'billing_country')])) ? $country->countries[$wc->OrderProp($order, 'billing_country')] : $wc->OrderProp($order, 'billing_country');
+		$bill_state   = ($wc->OrderProp($order, 'billing_country') && $wc->OrderProp($order, 'billing_state') && isset($country->states[$wc->OrderProp($order, 'billing_country')][$wc->OrderProp($order, 'billing_state')])) ? $country->states[$wc->OrderProp($order, 'billing_country')][$wc->OrderProp($order, 'billing_state')] : $wc->OrderProp($order, 'billing_state');
+
+		$shipp_country = (isset($country->countries[$wc->OrderProp($order, 'shipping_country')])) ? $country->countries[$wc->OrderProp($order, 'shipping_country')] : $wc->OrderProp($order, 'shipping_country');
+		$shipp_state   = ($wc->OrderProp($order, 'shipping_country') && $wc->OrderProp($order, 'shipping_state') && isset($country->states[$wc->OrderProp($order, 'shipping_country')][$wc->OrderProp($order, 'shipping_state')])) ? $country->states[$wc->OrderProp($order, 'shipping_country')][$wc->OrderProp($order, 'shipping_state')] : $wc->OrderProp($order, 'shipping_state');
+
+		$post = get_post($order_id);
+
+		$tags = array(
+			'{b_first_name}'  => $wc->OrderProp($order, 'billing_first_name'),
+			'{b_last_name}'   => $wc->OrderProp($order, 'billing_last_name'),
+			'{b_company}'     => $wc->OrderProp($order, 'billing_company'),
+			'{b_address_1}'   => $wc->OrderProp($order, 'billing_address_1'),
+			'{b_address_2}'   => $wc->OrderProp($order, 'billing_address_2'),
+			'{b_state}'       => $bill_state,
+			'{b_city}'        => $wc->OrderProp($order, 'billing_city'),
+			'{b_postcode}'    => $wc->OrderProp($order, 'billing_postcode'),
+			'{b_country}'     => $bill_country,
+			'{sh_first_name}' => $wc->OrderProp($order, 'shipping_first_name'),
+			'{sh_last_name}'  => $wc->OrderProp($order, 'shipping_last_name'),
+			'{sh_company}'    => $wc->OrderProp($order, 'shipping_company'),
+			'{sh_address_1}'  => $wc->OrderProp($order, 'shipping_address_1'),
+			'{sh_address_2}'  => $wc->OrderProp($order, 'shipping_address_2'),
+			'{sh_state}'      => $shipp_state,
+			'{sh_city}'       => $wc->OrderProp($order, 'shipping_city'),
+			'{sh_postcode}'   => $wc->OrderProp($order, 'shipping_postcode'),
+			'{sh_country}'    => $shipp_country,
+			'{phone}'         => get_post_meta($order_id, '_billing_phone', true),
+			'{mobile}'        => get_user_meta($order->get_customer_id(), 'billing_mobile_number', true),
+			'{email}'         => $wc->OrderProp($order, 'billing_email'),
+			'{order_id}'      => $wc->OrderProp($order, 'order_number'),
+			'{date}'          => $wc->OrderDate($order),
+			'{post_id}'       => $order_id,
+			'{status}'        => $wc->statusName($order_status, true),
+			'{price}'         => $price,
+
+			'{all_items}'     => implode(' - ', $all_items),
+			'{all_items_qty}' => implode(' - ', $all_items_qty),
+			'{count_items}'   => count($all_items),
+
+			'{vendor_items}'       => implode(' - ', $vendor_items),
+			'{vendor_items_qty}'   => implode(' - ', $vendor_items_qty),
+			'{count_vendor_items}' => count($vendor_items),
+			'{vendor_price}'       => $vendor_price,
+
+			'{transaction_id}'  => get_post_meta($order_id, '_transaction_id', true),
+			'{payment_method}'  => $payment_method,
+			'{shipping_method}' => $shipping_method,
+			'{description}'     => nl2br(esc_html($post->post_excerpt)),
+		);
+
+
+		$content = str_ireplace(array_keys($tags), array_values($tags), $content);
+		$content = str_ireplace(array('<br>', '<br/>', '<br />', '&nbsp;'), array('', '', '', ' '), $content);
+
+
+		return $content;
+	}
 }
